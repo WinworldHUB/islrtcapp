@@ -34,7 +34,7 @@ const WordsTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.data ? (
+            {props.data && props.data.length > 0 ? (
               props.data.map((item) => (
                 <tr key={item.id}>
                   <td className="border">

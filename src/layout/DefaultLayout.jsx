@@ -1,4 +1,3 @@
-import Loading from "../components/Loading";
 import MainMenu from "../components/MainMenu";
 
 const DefaultLayout = (props) => {

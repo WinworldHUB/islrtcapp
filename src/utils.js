@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 export const showDialog = (dialogId, onSuccess) => {
-  const newWordModal = new bootstrap.Modal(`#${dialogId}`, {
+  const dlg = new bootstrap.Modal(`#${dialogId}`, {
     keyboard: false,
   });
-  newWordModal.show();
-  onSuccess(newWordModal);
+  dlg.show();
+  onSuccess(dlg);
 };
 
-export const hideDialog = (dialogHandle) => {
-  if (dialogHandle) dialogHandle.hide();
+export const hideDialog = (dlgHandle) => {
+  dlgHandle?.hide();
 };

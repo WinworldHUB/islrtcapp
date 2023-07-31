@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hideDialog, showDialog } from "../utils";
 
 const Loading = (props) => {
   const [dlgHandle, setDlgHandle] = useState(null);
 
   useEffect(() => {
-    if (props.isShow) {
-      showDialog("dlgLoading", setDlgHandle);
+    if (props.isShow && !dlgHandle) {
+      console.log("Show called");
+      showDialog("dlgLoading", (handle) => setDlgHandle(handle));
     } else {
+      console.log("hide called ", dlgHandle);
       hideDialog(dlgHandle);
+      setDlgHandle(null);
     }
   }, [props.isShow]);
 
@@ -29,7 +32,9 @@ const Loading = (props) => {
               {props.title}
             </h1>
           </div>
-          <div className="modal-body">We are working on your request ...</div>
+          <div className="modal-body" onClick={props.onCancel}>
+            We are working on your request ...
+          </div>
         </div>
       </div>
     </div>

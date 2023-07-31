@@ -38,8 +38,8 @@ const NewWord = (props) => {
   };
 
   const onDeleted = () => {
+    props.onDeleteClicked(word);
     clearForm();
-    props.onDeleteClicked();
   };
 
   const onSubmitForm = async () => {
@@ -127,7 +127,10 @@ const NewWord = (props) => {
                   required="required"
                   value={word.category_english}
                   onChange={(el) =>
-                    setWord({ ...word, category_english: el.target.value })
+                    setWord({
+                      ...word,
+                      category_english: el.target.value,
+                    })
                   }
                 />
               </div>
@@ -191,7 +194,10 @@ const NewWord = (props) => {
                   required="required"
                   value={word.video_url_english}
                   onChange={(el) =>
-                    setWord({ ...word, video_url_english: el.target.value })
+                    setWord({
+                      ...word,
+                      video_url_english: el.target.value,
+                    })
                   }
                 />
               </div>
@@ -207,7 +213,10 @@ const NewWord = (props) => {
                   required="required"
                   value={word.video_url_hindi}
                   onChange={(el) =>
-                    setWord({ ...word, video_url_hindi: el.target.value })
+                    setWord({
+                      ...word,
+                      video_url_hindi: el.target.value,
+                    })
                   }
                 />
               </div>

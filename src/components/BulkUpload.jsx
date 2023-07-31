@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { hideDialog, showDialog } from "../utils";
-import useBulkUpload from "../hooks/useBulkUpload";
+import { isEmpty } from "lodash";
+import {
+  CATEGORY_EMPTY_ERROR,
+  FILE_EMPTY_ERROR,
+  LANGUAGE_NOT_SELECTED_ERROR,
+} from "../constants/index.d";
 
 const BulkUpload = (props) => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [data, setData] = useState(null);
   const [bulkUploadDialog, setBulkUploadDialog] = useState(null);
-  const { totalRecords, uploadData } = useBulkUpload();
-  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     if (props.isShow) {
@@ -16,18 +19,6 @@ const BulkUpload = (props) => {
       hideDialog(bulkUploadDialog);
     }
   }, [props.isShow]);
-
-  useEffect(() => {
-    if (totalRecords > -1) {
-      setSelectedFile(null);
-    }
-  }, [totalRecords]);
-
-  useEffect(() => {
-    if (selectedFile) {
-      uploadData(selectedFile);
-    }
-  }, [selectedFile]);
 
   useEffect(() => {
     if (props.data) setData(props.data);
@@ -43,7 +34,32 @@ const BulkUpload = (props) => {
     props.onCancelClicked();
   };
 
-  const onSubmitForm = () => {};
+  const onFileSelected = (el) => {
+    //setData({ ...data, file: el.target.files[0] });
+    const fileReader = new FileReader();
+    fileReader.readAsText(el.target.files[0]);
+    fileReader.onload = (e) =>
+      setData({ ...data, file: JSON.parse(e.target.result) });
+  };
+
+  const onSubmitForm = () => {
+    if (isEmpty(data.language)) {
+      setErrorMsg(LANGUAGE_NOT_SELECTED_ERROR);
+      return;
+    }
+
+    if (isEmpty(data.category)) {
+      setErrorMsg(CATEGORY_EMPTY_ERROR);
+      return;
+    }
+
+    if (isEmpty(data.file)) {
+      setErrorMsg(FILE_EMPTY_ERROR);
+      return;
+    }
+
+    props.onSubmit(data);
+  };
 
   return (
     <div
@@ -77,11 +93,14 @@ const BulkUpload = (props) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="inlineRadioOptions"
-                    id="inlineRadio1"
-                    value="option1"
+                    name="language"
+                    id="languageEN"
+                    value="english"
+                    onChange={(e) =>
+                      setData({ ...data, language: e.target.value })
+                    }
                   />
-                  <label className="form-check-label" htmlFor="inlineRadio1">
+                  <label className="form-check-label" htmlFor="languageEN">
                     English
                   </label>
                 </div>
@@ -89,11 +108,14 @@ const BulkUpload = (props) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="inlineRadioOptions"
-                    id="inlineRadio2"
-                    value="option2"
+                    name="language"
+                    id="languageHI"
+                    value="hindi"
+                    onChange={(e) =>
+                      setData({ ...data, language: e.target.value })
+                    }
                   />
-                  <label className="form-check-label" htmlFor="inlineRadio2">
+                  <label className="form-check-label" htmlFor="languageHI">
                     Hindi
                   </label>
                 </div>
@@ -127,28 +149,10 @@ const BulkUpload = (props) => {
                   id="txtWords"
                   placeholder="Json file containing words data"
                   required="required"
-                  disabled={!!selectedFile}
                   accept="application/JSON"
-                  onChange={(e) => setSelectedFile(e.target.files[0])}
+                  onChange={onFileSelected}
                 />
               </div>
-              {selectedFile && totalRecords === -1 ? (
-                <div
-                  class="progress"
-                  role="progressbar"
-                  aria-label="Animated striped example"
-                  aria-valuenow="75"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  <div
-                    class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                    style={{ width: "100%" }}
-                  ></div>
-                </div>
-              ) : (
-                totalRecords > -1 && `Total records found: ${totalRecords}`
-              )}
               {errorMsg && (
                 <div className="text-center text-danger">{errorMsg}</div>
               )}
