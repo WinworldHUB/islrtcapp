@@ -35,11 +35,10 @@ const BulkUpload = (props) => {
   };
 
   const onFileSelected = (el) => {
-    //setData({ ...data, file: el.target.files[0] });
     const fileReader = new FileReader();
     fileReader.readAsText(el.target.files[0]);
     fileReader.onload = (e) =>
-      setData({ ...data, file: JSON.parse(e.target.result) });
+      setData({ ...data, words: JSON.parse(e.target.result) });
   };
 
   const onSubmitForm = () => {
@@ -53,7 +52,7 @@ const BulkUpload = (props) => {
       return;
     }
 
-    if (isEmpty(data.file)) {
+    if (isEmpty(data.words)) {
       setErrorMsg(FILE_EMPTY_ERROR);
       return;
     }

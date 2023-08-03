@@ -12,7 +12,7 @@ const useApi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getData = (url, onSuccess) => {
+  const getData = (url, onSuccess, onFailure) => {
     setIsLoading(true);
     fetch(`${ISLRTC_BASE_URL}${url}`, API_GET_OPTIONS)
       .then((data) =>
@@ -30,15 +30,17 @@ const useApi = () => {
           .catch((errorValue) => {
             setError(errorValue);
             setIsLoading(false);
+            onFailure?.(errorValue);
           })
       )
       .catch((errorValue) => {
         setError(errorValue);
         setIsLoading(false);
+        onFailure?.(errorValue);
       });
   };
 
-  const postData = (url, body, onSuccess) => {
+  const postData = (url, body, onSuccess, onFailure) => {
     setIsLoading(true);
     fetch(`${ISLRTC_BASE_URL}${url}`, API_POST_OPTIONS(body))
       .then((data) =>
@@ -56,15 +58,17 @@ const useApi = () => {
           .catch((errorValue) => {
             setError(errorValue);
             setIsLoading(false);
+            onFailure?.(errorValue);
           })
       )
       .catch((errorValue) => {
         setError(errorValue);
         setIsLoading(false);
+        onFailure?.(errorValue);
       });
   };
 
-  const deleteData = (url, body, onSuccess) => {
+  const deleteData = (url, body, onSuccess, onFailure) => {
     setIsLoading(true);
     fetch(`${ISLRTC_BASE_URL}${url}`, API_DELETE_OPTIONS(body))
       .then((data) =>
@@ -82,15 +86,17 @@ const useApi = () => {
           .catch((errorValue) => {
             setError(errorValue);
             setIsLoading(false);
+            onFailure?.(errorValue);
           })
       )
       .catch((errorValue) => {
         setError(errorValue);
         setIsLoading(false);
+        onFailure?.(errorValue);
       });
   };
 
-  const putData = (url, body, onSuccess) => {
+  const putData = (url, body, onSuccess, onFailure) => {
     setIsLoading(true);
     fetch(`${ISLRTC_BASE_URL}${url}`, API_PUT_OPTIONS(body))
       .then((data) =>
@@ -108,11 +114,13 @@ const useApi = () => {
           .catch((errorValue) => {
             setError(errorValue);
             setIsLoading(false);
+            onFailure?.(errorValue);
           })
       )
       .catch((errorValue) => {
         setError(errorValue);
         setIsLoading(false);
+        onFailure?.(errorValue);
       });
   };
 

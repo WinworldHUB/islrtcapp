@@ -6,11 +6,13 @@ import { DEFAULT_BULK_UPLOAD, DEFAULT_WORD } from "../constants/index.d";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BulkUpload from "../components/BulkUpload";
 import useApi from "../hooks/useApi";
+import ProcessBulkUpload from "../components/ProcessBulkUpload";
+import LoadingIcon from "../components/LoadingIcon";
 
 const Home = () => {
   const [word, setWord] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [bulkData, setBulkData] = useState(DEFAULT_BULK_UPLOAD);
+  const [bulkData, setBulkData] = useState(null);
 
   const {
     error: APIError,
@@ -18,12 +20,14 @@ const Home = () => {
     deleteData,
     getData,
     postData,
-    putData,
   } = useApi();
 
   const [isShowNewWord, setIsShowNewWord] = useState(false);
   const [isShowBulkUpload, setIsShowBulkUpload] = useState(false);
-  const [data, setData] = useState([]);
+  const [isShowProcessBulkUpload, setIsShowProcessBulkUpload] = useState(false);
+  const [data, setData] = useState(null);
+  const [categoriesEN, setCategoriesEN] = useState([]);
+  const [categoriesHI, setCategoriesHI] = useState([]);
 
   const showNewWordDialog = () => {
     setIsShowNewWord(true);
@@ -47,9 +51,11 @@ const Home = () => {
     }
   };
 
-  const refreshData = useCallback(() => {
+  const refreshData = () => {
     getData("", setData);
-  }, []);
+    getData("hindi/categories", setCategoriesHI);
+    getData("english/categories", setCategoriesEN);
+  };
 
   const saveWord = (newWord) => {
     postData(newWord.id, newWord, refreshData);
@@ -61,25 +67,22 @@ const Home = () => {
 
   const bulkUploadData = (newData) => {
     setIsShowBulkUpload(false);
-    setBulkData(null);
+    setBulkData(newData);
+    setIsShowProcessBulkUpload(true);
 
     console.log(newData);
-    // const data = new FormData();
-    // data.append("file", newData.file);
-    postData(
-      `${newData.language}/${newData.category}`,
-      newData.file,
-      refreshData
-    );
   };
 
   useEffect(() => {
-    refreshData();
+    if (!data) refreshData();
   }, []);
+
+  //if (APILoading === true) return <LoadingIcon />;
 
   return (
     <DefaultLayout>
       <WordsTable
+        categories={categoriesEN}
         data={data}
         onEditClicked={editWord}
         onNewClicked={addWord}
@@ -111,8 +114,13 @@ const Home = () => {
       <BulkUpload
         isShow={isShowBulkUpload}
         onCancelClicked={() => setIsShowBulkUpload(false)}
-        data={bulkData}
+        data={bulkData ?? DEFAULT_BULK_UPLOAD}
         onSubmit={bulkUploadData}
+      />
+      <ProcessBulkUpload
+        isShow={isShowProcessBulkUpload}
+        data={bulkData}
+        onCompleted={refreshData}
       />
     </DefaultLayout>
   );

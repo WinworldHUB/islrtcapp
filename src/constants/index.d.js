@@ -33,7 +33,7 @@ export const DEFAULT_WORD = {
 export const DEFAULT_BULK_UPLOAD = {
   language: "",
   category: "",
-  file: "",
+  words: "",
 };
 
 export const SAMPLE_DATA = [
@@ -79,3 +79,6 @@ export const API_PUT_OPTIONS = (data) => {
 
 export const API_SUCCESS = "success";
 export const API_FAILURE = "failure";
+
+export const LANGUAGE_EN = "English";
+export const LANGUAGE_HI = "Hindi";
