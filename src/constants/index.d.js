@@ -1,5 +1,6 @@
 export const YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
-export const ISLRTC_BASE_URL = "http://localhost:8080/";
+//export const ISLRTC_BASE_URL = "http://localhost:8080/";
+export const ISLRTC_BASE_URL = "https://islrtcbe.onrender.com/";
 
 export const ENGLISH_CATEGORY_EMPTY_ERROR =
   "Please provide a value for English Category";
