@@ -1,7 +1,7 @@
 const LoadingIcon = () => {
   return (
     <div className="w-100 text-center">
-      <img src="/assets/images/Loading-icon.gif" alt="Loading ..." />
+      <img src="/assets/images/Loading_icon.gif" alt="Loading ..." />
     </div>
   );
 };

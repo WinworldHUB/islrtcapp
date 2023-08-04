@@ -1,8 +1,46 @@
-import { Link } from "react-router-dom";
-import { YOUTUBE_BASE_URL } from "../constants/index.d";
-import LoadingIcon from "./LoadingIcon";
+import { useRef } from "react";
+import DataTable from "react-data-table-component";
 
 const WordsTable = (props) => {
+  const headerRef = useRef(null);
+  const columns = [
+    {
+      name: "Id",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "Category English",
+      selector: (row) => row.category_english,
+      sortable: true,
+    },
+    {
+      name: "Category Hindi",
+      selector: (row) => row.category_hindi,
+      sortable: true,
+    },
+    {
+      name: "Word English",
+      selector: (row) => row.word_english,
+      sortable: true,
+    },
+    {
+      name: "Word Hindi",
+      selector: (row) => row.word_hindi,
+      sortable: true,
+    },
+    {
+      name: "Video Url English",
+      selector: (row) => row.video_url_english,
+      sortable: true,
+    },
+    {
+      name: "Video Url Hindi",
+      selector: (row) => row.video_url_hindi,
+      sortable: true,
+    },
+  ];
+
   return (
     <div className="row">
       <div className="col-12 pb-2 d-flex justify-content-between">
@@ -22,7 +60,7 @@ const WordsTable = (props) => {
             ))}
           </select>
         </div>
-        <div>
+        <div ref={headerRef}>
           <button
             type="button"
             className="btn btn-warning me-2"
@@ -39,65 +77,18 @@ const WordsTable = (props) => {
           </button>
         </div>
       </div>
-      <div className="col-12 table-responsive ">
-        <table className="table border">
-          <thead>
-            <tr className="p-2">
-              <th className="border">Id</th>
-              <th className="border">Category English</th>
-              <th className="border">Category Hindi</th>
-              <th className="border">Word English</th>
-              <th className="border">Word Hindi</th>
-              <th className="border">Video Url English</th>
-              <th className="border">Video Url Hindi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.data && props.data.length > 0 ? (
-              props.data.map((item) => (
-                <tr key={item.id}>
-                  <td className="border">
-                    <Link
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        props.onEditClicked(item.id);
-                      }}
-                    >
-                      {item.id}
-                    </Link>
-                  </td>
-                  <td className="border">{item.category_english}</td>
-                  <td className="border">{item.category_hindi}</td>
-                  <td className="border">{item.word_english}</td>
-                  <td className="border">{item.word_hindi}</td>
-                  <td className="border">
-                    <Link
-                      to={`${YOUTUBE_BASE_URL}${item.video_url_english}`}
-                      target="_blank"
-                    >
-                      {item.video_url_english}
-                    </Link>
-                  </td>
-                  <td className="border">
-                    <Link
-                      to={`${YOUTUBE_BASE_URL}${item.video_url_hindi}`}
-                      target="_blank"
-                    >
-                      {item.video_url_hindi}
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <th colSpan={7} className="text-center text-danger border">
-                  No data, start by adding new record
-                </th>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="col-12">
+        <DataTable
+          columns={columns}
+          data={props.data}
+          fixedHeader={true}
+          fixedHeaderScrollHeight={`calc(100vh - ${
+            headerRef.current?.clientHeight + 130
+          }px)`}
+          pagination={true}
+          highlightOnHover={true}
+          onRowClicked={(row) => props.onEditClicked(row.id)}
+        />
       </div>
     </div>
   );

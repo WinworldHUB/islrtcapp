@@ -3,7 +3,7 @@ import WordsTable from "../components/WordsTable";
 import DefaultLayout from "../layout/DefaultLayout";
 import NewWord from "../components/NewWord";
 import { DEFAULT_BULK_UPLOAD, DEFAULT_WORD } from "../constants/index.d";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import BulkUpload from "../components/BulkUpload";
 import useApi from "../hooks/useApi";
 import ProcessBulkUpload from "../components/ProcessBulkUpload";
@@ -69,15 +69,11 @@ const Home = () => {
     setIsShowBulkUpload(false);
     setBulkData(newData);
     setIsShowProcessBulkUpload(true);
-
-    console.log(newData);
   };
 
-  useEffect(() => {
-    if (!data) refreshData();
-  }, []);
+  if (!data && APILoading === false) refreshData();
 
-  //if (APILoading === true) return <LoadingIcon />;
+  if (!data) return <LoadingIcon />;
 
   return (
     <DefaultLayout>
@@ -111,12 +107,17 @@ const Home = () => {
         isShow={isShowNewWord}
       />
 
-      <BulkUpload
-        isShow={isShowBulkUpload}
-        onCancelClicked={() => setIsShowBulkUpload(false)}
-        data={bulkData ?? DEFAULT_BULK_UPLOAD}
-        onSubmit={bulkUploadData}
-      />
+      {bulkData && (
+        <BulkUpload
+          isShow={isShowBulkUpload}
+          onCancelClicked={() => {
+            setBulkData(null);
+            setIsShowBulkUpload(false);
+          }}
+          data={bulkData}
+          onSubmit={bulkUploadData}
+        />
+      )}
       <ProcessBulkUpload
         isShow={isShowProcessBulkUpload}
         data={bulkData}
